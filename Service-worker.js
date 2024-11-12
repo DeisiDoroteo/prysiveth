@@ -130,7 +130,7 @@ registerRoute(
 
 // Cachea imágenes específicamente de Amazon S3
 registerRoute(
-  ({ url }) => url.origin === 'https://viajesramos.s3.us-east-2.amazonaws.com',
+  ({ url }) => url.origin === 'https://viajesramos.s3.us-east-2.amazonaws.com/',
   new CacheFirst({
     cacheName: 's3-image-cache',
     plugins: [
