@@ -1,39 +1,22 @@
 import { useState, useEffect } from "react";
 import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
-import axios from 'axios';
+
+// Importa tus imágenes desde la carpeta 'src'
+import image1 from '/public/src/img/1.png';
+import image2 from '/public/src/img/2.png';
+import image3 from '/public/src/img/3.png';
+import image4 from '/public/src/img/4.jpeg';
 
 function Slider() {
-  const [slides, setSlides] = useState([]);
+  // Define las imágenes en el array 'slides'
+  const slides = [
+    { url: image1 },
+    { url: image2 },
+    { url: image3 },
+    { url: image4 },
+    // Agrega más imágenes si es necesario
+  ];
   const [currentIndex, setCurrentIndex] = useState(0);
-  const imageUrlBase = `https://${import.meta.env.VITE_AWS_BUCKET_NAME}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/`;
-
-  const cacheImages = async (images) => {
-    if ('caches' in window) {
-      const cache = await caches.open('image-cache');
-      images.forEach(image => {
-        cache.add(image.url);
-      });
-    }
-  };
-
-  const fetchSlides = async () => {
-    try {
-      const response = await axios.get('https://back-end-siveth-g8vc.vercel.app/api/slider');
-      const fetchedSlides = response.data
-        .filter(record => record.active === 1)
-        .map(record => ({
-          url: `${imageUrlBase}${record.image}`,
-        }));
-      setSlides(fetchedSlides);
-      cacheImages(fetchedSlides);
-    } catch (error) {
-      console.error('Error fetching slides:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchSlides();
-  }, []);
 
   const prevSlide = () => {
     const isFirstSlide = currentIndex === 0;

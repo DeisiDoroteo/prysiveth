@@ -11,20 +11,21 @@ const urlsToCache = [
   '/Privacidad',
   '/InformacionM',
   '/InformacionP',
-  '/InformacionVP',  
-  '/assets/mudanzas.jpeg',
-  '/assets/R.jpeg',
-  '/assets/urban.png',
+  '/InformacionVP',
+  '/public/src/img/1.png', // Ruta correcta para las imágenes
+  '/public/src/img/2.png',
+  '/public/src/img/3.png',
+  '/public/src/img/4.jpeg',
   '/public/src/img/logo.png',
   '/public/src/img/headerB.jpg',
-  
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        return cache.addAll(urlsToCache);
+        console.log('[Service Worker] Caching files');
+        return cache.addAll(urlsToCache); // Agrega todas las URLs al caché
       })
   );
   console.log('[Service Worker] Installing Service Worker ...', event);
@@ -37,7 +38,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
+            return caches.delete(cacheName); // Elimina cachés antiguos
           }
         })
       );
@@ -52,30 +53,31 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request)
       .then((response) => {
         if (response) {
-          return response;
+          return response; // Si el archivo está en caché, lo devuelve
         }
-        return fetch(event.request);
+        return fetch(event.request); // Si no, hace la solicitud de red
       })
   );
 });
 
-// Registro de rutas usando Workbox
+// Registro de rutas usando Workbox para las imágenes
 registerRoute(
   ({ request }) => request.destination === 'image',
   new StaleWhileRevalidate({
     cacheName: 'image-cache',
     plugins: [
       new CacheableResponsePlugin({
-        statuses: [0, 200],
+        statuses: [0, 200], // Acepta respuestas con código 0 o 200
       }),
       new ExpirationPlugin({
-        maxEntries: 60,
+        maxEntries: 60, // Límite de 60 entradas en caché
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
       }),
     ],
   })
 );
 
+// Registro de rutas para las páginas
 registerRoute(
   ({ request }) => request.destination === 'document',
   new StaleWhileRevalidate({
