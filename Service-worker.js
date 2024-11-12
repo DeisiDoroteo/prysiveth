@@ -77,11 +77,11 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-// Cachea las respuestas de la API para el slider
+// Cachea las respuestas de la API para el slider usando StaleWhileRevalidate
 registerRoute(
   ({ url }) => url.origin === 'https://back-end-siveth-g8vc.vercel.app/api/slider',
-  new CacheFirst({
-    cacheName: 'api-cache',
+  new StaleWhileRevalidate({
+    cacheName: 'api-slider-cache',
     plugins: [
       new CacheableResponsePlugin({
         statuses: [0, 200],
