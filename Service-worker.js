@@ -1,4 +1,4 @@
-import { registerRoute } from 'workbox-routing'; 
+import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate, CacheFirst } from 'workbox-strategies';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { ExpirationPlugin } from 'workbox-expiration';
@@ -17,6 +17,7 @@ const urlsToCache = [
   '/assets/urban.png',
   '/public/src/img/logo.png',
   '/public/src/img/headerB.jpg',
+  'https://viajesramos.s3.us-east-2.amazonaws.com/1721975032484.png' // URL completa para la imagen de S3
 ];
 
 // Instala y guarda en caché recursos estáticos
@@ -130,7 +131,7 @@ registerRoute(
 
 // Cachea imágenes específicamente de Amazon S3
 registerRoute(
-  ({ url }) => url.origin === 'https://viajesramos.s3.us-east-2.amazonaws.com',
+  ({ url }) => url.origin === 'https://viajesramos.s3.us-east-2.amazonaws.com/',
   new CacheFirst({
     cacheName: 's3-image-cache',
     plugins: [
