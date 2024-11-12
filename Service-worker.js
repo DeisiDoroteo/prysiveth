@@ -1,4 +1,4 @@
-import { registerRoute } from 'workbox-routing';
+import { registerRoute } from 'workbox-routing'; 
 import { StaleWhileRevalidate, CacheFirst } from 'workbox-strategies';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { ExpirationPlugin } from 'workbox-expiration';
@@ -50,15 +50,31 @@ self.addEventListener('activate', (event) => {
 
 // Captura las peticiones y busca en la caché primero
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) {
-          return response;
+  // Captura las peticiones de imágenes, primero intentando buscar en la cache
+  if (event.request.destination === 'image') {
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse; // Devuelve la imagen de la caché si está disponible
         }
-        return fetch(event.request);
+        return fetch(event.request).then((networkResponse) => {
+          // Si la respuesta es válida, se almacena en la caché
+          if (networkResponse && networkResponse.status === 200) {
+            caches.open('image-cache').then((cache) => {
+              cache.put(event.request, networkResponse.clone());
+            });
+          }
+          return networkResponse;
+        });
       })
-  );
+    );
+  } else {
+    event.respondWith(
+      caches.match(event.request).then((response) => {
+        return response || fetch(event.request); // Busca en cache o recurre a la red
+      })
+    );
+  }
 });
 
 // Cachea las respuestas de la API para el slider
