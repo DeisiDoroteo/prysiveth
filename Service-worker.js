@@ -60,7 +60,7 @@ self.addEventListener('fetch', (event) => {
 
 // Registro de rutas usando Workbox
 registerRoute(
-  ({ url }) => url.origin === 'https://back-end-siveth-g8vc.vercel.app/api/records', // Cambia esto a la URL de tu API
+  ({ url }) => url.origin === 'https://back-end-siveth-g8vc.vercel.app/api/slider', // Cambia esto a la URL de tu API
   new StaleWhileRevalidate({
     cacheName: 'api-cache',
     plugins: [
@@ -109,7 +109,7 @@ registerRoute(
 
 // Cachear imágenes de Amazon S3
 registerRoute(
-  ({ url }) => url.origin === `https://${import.meta.env.VITE_AWS_BUCKET_NAME}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com`,
+  ({ url }) => url.origin === `https://${import.meta.env.VITE_AWS_BUCKET_NAME}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/`,
   new StaleWhileRevalidate({
     cacheName: 's3-image-cache',
     plugins: [
