@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- <meta
+  http-equiv="Content-Security-Policy"
+  content= "
+  script-src 'self';
+  img-src 'self' data: https://wallpapercave.com/wp/wp3386769.jpg https://getwallpapers.com/wallpaper/full/5/c/0/606489.jpg
+"
+    /> -->
+  <title>SIVETH</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx">
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, error => {
+          console.log('ServiceWorker registration failed: ', error);
+        });
+      });
+    }
+
+  </script>
+
+</body>
+
+</html>

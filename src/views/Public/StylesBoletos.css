@@ -1,0 +1,81 @@
+.background-image-div {
+  background-image: url('/src/img/headerB.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+  }
+    
+  .contenido-div {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    width: 1100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+  }
+  
+   
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    /* margin-right: 10px; */
+  }
+    
+  /* .input-group label {
+    margin-bottom: 5px;
+  }
+  
+  .input-group input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .contenido-div .btn123 {
+    padding: 5px 80px;
+    margin-top: 5px;
+  } */
+  
+  /* Estilos para el contenedor y los botones */
+  
+  /* .asientos-container {
+    background-color: white;
+    margin-top: 90px;
+    margin-left: 300px;
+  } */
+/*   
+  #fila2 {
+    background-color: white;
+    margin-top: 10px;
+  }
+  #fila3 {
+    background-color: white;
+    margin-top: 70px;
+  }
+  
+  #fila4 {
+    background-color: white;
+    margin-top: 10px;
+    margin-bottom: 90px;
+  } */
+ 
+/*   
+  #btnP1{
+    margin-left: 300px;
+  }
+  
+  .form-boletos{
+    margin-right: 200px;
+  } */
+  /* Añade estilos adicionales según sea necesario */
+
+
+
+
+  

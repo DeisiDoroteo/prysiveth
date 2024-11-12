@@ -1,0 +1,3 @@
+.hide-password-icon::-ms-reveal {
+    display: none !important;
+}

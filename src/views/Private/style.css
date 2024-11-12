@@ -1,0 +1,46 @@
+/* Estilos para el overlay del modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscurecido */
+    z-index: 1000; /* Asegura que esté por encima del resto del contenido */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Estilos para el contenido del modal */
+  .modal-content {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 80%; /* Ancho máximo del modal */
+    max-height: 80%; /* Altura máxima del modal */
+    overflow: auto; /* Habilita el desplazamiento si el contenido es demasiado grande */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para el efecto de elevación */
+  }
+  
+  /* Estilos opcionales para botones en el modal */
+  .modal-content button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* Opcional: Estilos para el botón de cerrar */
+  .modal-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.5);
+  }
+  

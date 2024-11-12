@@ -1,0 +1,25 @@
+/* Carousel.css */
+/* Agrega la importación de los estilos de Slick */
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+/* Agrega tus estilos personalizados aquí */
+.slick-prev,
+.slick-next {
+  font-size: 24px;
+  color: #000; /* Color de las flechas del carrusel */
+}
+
+.slick-prev:hover,
+.slick-next:hover {
+  color: #333; /* Color de las flechas del carrusel al pasar el mouse */
+}
+
+.slick-dots li button:before {
+  font-size: 12px;
+  color: #000; /* Color de los puntos de paginación del carrusel */
+}
+
+.slick-dots li.slick-active button:before {
+  color: #333; /* Color del punto activo de paginación del carrusel */
+}
