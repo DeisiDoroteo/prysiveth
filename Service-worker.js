@@ -1,5 +1,5 @@
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate, CacheFirst } from 'workbox-strategies';
+import { StaleWhileRevalidate } from 'workbox-strategies';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { ExpirationPlugin } from 'workbox-expiration';
 
@@ -11,16 +11,15 @@ const urlsToCache = [
   '/Privacidad',
   '/InformacionM',
   '/InformacionP',
-  '/InformacionVP',
+  '/InformacionVP',  
   '/assets/mudanzas.jpeg',
   '/assets/R.jpeg',
   '/assets/urban.png',
   '/public/src/img/logo.png',
   '/public/src/img/headerB.jpg',
-  'https://viajesramos.s3.us-east-2.amazonaws.com/1721975032484.png' // URL completa para la imagen de S3
+  
 ];
 
-// Instala y guarda en caché recursos estáticos
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -28,10 +27,9 @@ self.addEventListener('install', (event) => {
         return cache.addAll(urlsToCache);
       })
   );
-  console.log('[Service Worker] Instalando Service Worker...', event);
+  console.log('[Service Worker] Installing Service Worker ...', event);
 });
 
-// Activa y limpia cachés antiguas
 self.addEventListener('activate', (event) => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
@@ -45,60 +43,26 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
-  console.log('[Service Worker] Activando Service Worker...', event);
+  console.log('[Service Worker] Activating Service Worker ....', event);
   return self.clients.claim();
 });
 
-// Captura las peticiones y busca en la caché primero
 self.addEventListener('fetch', (event) => {
-  // Captura las peticiones de imágenes, primero intentando buscar en la cache
-  if (event.request.destination === 'image') {
-    event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        if (cachedResponse) {
-          return cachedResponse; // Devuelve la imagen de la caché si está disponible
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        if (response) {
+          return response;
         }
-        return fetch(event.request).then((networkResponse) => {
-          // Si la respuesta es válida, se almacena en la caché
-          if (networkResponse && networkResponse.status === 200) {
-            caches.open('image-cache').then((cache) => {
-              cache.put(event.request, networkResponse.clone());
-            });
-          }
-          return networkResponse;
-        });
+        return fetch(event.request);
       })
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request).then((response) => {
-        return response || fetch(event.request); // Busca en cache o recurre a la red
-      })
-    );
-  }
+  );
 });
 
-// Cachea las respuestas de la API para el slider usando StaleWhileRevalidate
-registerRoute(
-  ({ url }) => url.origin === 'https://back-end-siveth-g8vc.vercel.app/api/slider',
-  new StaleWhileRevalidate({
-    cacheName: 'api-slider-cache',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-      new ExpirationPlugin({
-        maxEntries: 50,
-        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 días
-      }),
-    ],
-  })
-);
-
-// Cachea imágenes de cualquier origen, incluyendo Amazon S3
+// Registro de rutas usando Workbox
 registerRoute(
   ({ request }) => request.destination === 'image',
-  new CacheFirst({
+  new StaleWhileRevalidate({
     cacheName: 'image-cache',
     plugins: [
       new CacheableResponsePlugin({
@@ -112,10 +76,9 @@ registerRoute(
   })
 );
 
-// Cachea documentos HTML
 registerRoute(
   ({ request }) => request.destination === 'document',
-  new CacheFirst({
+  new StaleWhileRevalidate({
     cacheName: 'pages-cache',
     plugins: [
       new CacheableResponsePlugin({
@@ -129,31 +92,14 @@ registerRoute(
   })
 );
 
-// Cachea imágenes específicamente de Amazon S3
-registerRoute(
-  ({ url }) => url.origin === 'https://viajesramos.s3.us-east-2.amazonaws.com/',
-  new CacheFirst({
-    cacheName: 's3-image-cache',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-      new ExpirationPlugin({
-        maxEntries: 100,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
-      }),
-    ],
-  })
-);
-
-// Muestra notificaciones en eventos push
+// Evento de push
 self.addEventListener('push', (event) => {
   const data = event.data.json();
   const title = data.title || 'Notificación Push';
   const options = {
     body: data.body,
-    icon: data.icon || '/assets/mudanzas.jpeg',
-    badge: data.badge || '/assets/mudanzas.jpeg',
+    icon: data.icon || '/assets/mudanzas.jpeg', // Ícono por defecto
+    badge: data.badge || '/assets/mudanzas.jpeg', // Insignia por defecto
   };
 
   event.waitUntil(
@@ -161,7 +107,7 @@ self.addEventListener('push', (event) => {
   );
 });
 
-// Abre la aplicación al hacer clic en la notificación
+// Evento de click en notificación
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
