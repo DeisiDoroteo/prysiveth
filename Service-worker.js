@@ -1,5 +1,5 @@
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { StaleWhileRevalidate, CacheFirst } from 'workbox-strategies';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { ExpirationPlugin } from 'workbox-expiration';
 
@@ -19,7 +19,7 @@ const urlsToCache = [
   '/public/src/img/headerB.jpg',
 ];
 
-// Install event - cache the initial static resources
+// Instala y guarda en caché recursos estáticos
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -27,10 +27,10 @@ self.addEventListener('install', (event) => {
         return cache.addAll(urlsToCache);
       })
   );
-  console.log('[Service Worker] Installing Service Worker ...', event);
+  console.log('[Service Worker] Instalando Service Worker...', event);
 });
 
-// Activate event - clean up old caches
+// Activa y limpia cachés antiguas
 self.addEventListener('activate', (event) => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
@@ -44,11 +44,11 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
-  console.log('[Service Worker] Activating Service Worker ....', event);
+  console.log('[Service Worker] Activando Service Worker...', event);
   return self.clients.claim();
 });
 
-// Fetch event - serve resources from cache or fetch and cache new ones
+// Captura las peticiones y busca en la caché primero
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
@@ -61,10 +61,10 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Cache API responses for the slider
+// Cachea las respuestas de la API para el slider
 registerRoute(
   ({ url }) => url.origin === 'https://back-end-siveth-g8vc.vercel.app/api/slider',
-  new StaleWhileRevalidate({
+  new CacheFirst({
     cacheName: 'api-cache',
     plugins: [
       new CacheableResponsePlugin({
@@ -72,16 +72,16 @@ registerRoute(
       }),
       new ExpirationPlugin({
         maxEntries: 50,
-        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 días
       }),
     ],
   })
 );
 
-// Cache images from all origins, including Amazon S3
+// Cachea imágenes de cualquier origen, incluyendo Amazon S3
 registerRoute(
   ({ request }) => request.destination === 'image',
-  new StaleWhileRevalidate({
+  new CacheFirst({
     cacheName: 'image-cache',
     plugins: [
       new CacheableResponsePlugin({
@@ -89,16 +89,16 @@ registerRoute(
       }),
       new ExpirationPlugin({
         maxEntries: 60,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
       }),
     ],
   })
 );
 
-// Cache HTML documents
+// Cachea documentos HTML
 registerRoute(
   ({ request }) => request.destination === 'document',
-  new StaleWhileRevalidate({
+  new CacheFirst({
     cacheName: 'pages-cache',
     plugins: [
       new CacheableResponsePlugin({
@@ -106,16 +106,16 @@ registerRoute(
       }),
       new ExpirationPlugin({
         maxEntries: 60,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
       }),
     ],
   })
 );
 
-// Cache images specifically from Amazon S3
+// Cachea imágenes específicamente de Amazon S3
 registerRoute(
   ({ url }) => url.origin === 'https://viajesramos.s3.us-east-2.amazonaws.com',
-  new StaleWhileRevalidate({
+  new CacheFirst({
     cacheName: 's3-image-cache',
     plugins: [
       new CacheableResponsePlugin({
@@ -123,13 +123,13 @@ registerRoute(
       }),
       new ExpirationPlugin({
         maxEntries: 100,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
       }),
     ],
   })
 );
 
-// Push event - display notifications
+// Muestra notificaciones en eventos push
 self.addEventListener('push', (event) => {
   const data = event.data.json();
   const title = data.title || 'Notificación Push';
@@ -144,7 +144,7 @@ self.addEventListener('push', (event) => {
   );
 });
 
-// Notification click event - open application on click
+// Abre la aplicación al hacer clic en la notificación
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
