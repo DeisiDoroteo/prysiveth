@@ -17,7 +17,6 @@ const urlsToCache = [
   '/assets/urban.png',
   '/public/src/img/logo.png',
   '/public/src/img/headerB.jpg',
-  
 ];
 
 self.addEventListener('install', (event) => {
@@ -61,6 +60,22 @@ self.addEventListener('fetch', (event) => {
 
 // Registro de rutas usando Workbox
 registerRoute(
+  ({ url }) => url.origin === 'https://back-end-siveth-g8vc.vercel.app/api/records', // Cambia esto a la URL de tu API
+  new StaleWhileRevalidate({
+    cacheName: 'api-cache',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({
+        maxEntries: 50,
+        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 días
+      }),
+    ],
+  })
+);
+
+registerRoute(
   ({ request }) => request.destination === 'image',
   new StaleWhileRevalidate({
     cacheName: 'image-cache',
@@ -86,6 +101,23 @@ registerRoute(
       }),
       new ExpirationPlugin({
         maxEntries: 60,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
+      }),
+    ],
+  })
+);
+
+// Cachear imágenes de Amazon S3
+registerRoute(
+  ({ url }) => url.origin === `https://${import.meta.env.VITE_AWS_BUCKET_NAME}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com`,
+  new StaleWhileRevalidate({
+    cacheName: 's3-image-cache',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({
+        maxEntries: 100,
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
       }),
     ],
