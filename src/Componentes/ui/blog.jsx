@@ -19,7 +19,7 @@ export default function Example() {
     {
       id: 2,
       date: '2024-07-23',
-      image: 'Guadalajara.jpeg',
+      image: 'Guadalajara.jpg',
       title: 'Guadalajara',
       description: 'Segunda ciudad más grande de México, capital del estado de Jalisco. Conocida por su cultura, mariachi, tequila y arquitectura colonial. Centro económico importante del oeste de México.'
     },
@@ -40,7 +40,7 @@ export default function Example() {
     {
       id: 5,
       date: '2024-07-23',
-      image: 'Valles.jpeg',
+      image: 'Valles.jpg',
       title: 'Ciudad Valles',
       description: 'Ubicada en el estado de San Luis Potosí, en la región Huasteca. Conocida como "La Puerta Grande de la Huasteca". Popular destino turístico por sus atractivos naturales como cascadas y ríos para practicar deportes acuáticos.'
     },
@@ -80,7 +80,7 @@ export default function Example() {
               </div>
               <div className="relative">
                 <img
-                  src={`/public/src/img/${record.image}`} 
+                  src={`/src/img/${record.image}`} 
                   alt={record.title}
                   className="w-full h-64 object-cover rounded-lg mb-3"
                 />
