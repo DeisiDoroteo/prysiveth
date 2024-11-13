@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
 
-// Importa tus imágenes desde la carpeta 'src'
-import image1 from '/public/src/img/1.png';
-import image2 from '/public/src/img/2.png';
-import image3 from '/public/src/img/3.png';
-import image4 from '/public/src/img/4.jpeg';
+// Importa las imágenes correctamente desde la carpeta 'src/img'
+import image1 from './src/img/1.png';
+import image2 from './src/img/2.png';
+import image3 from './src/img/3.png';
+import image4 from './src/img/4.jpeg';
 
 function Slider() {
   // Define las imágenes en el array 'slides'
