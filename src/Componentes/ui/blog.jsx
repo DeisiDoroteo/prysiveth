@@ -80,7 +80,7 @@ export default function Example() {
               </div>
               <div className="relative">
                 <img
-                  src={`/public/src/img/${record.image}`} 
+                  src={`/src/img/${record.image}`} 
                   alt={record.title}
                   className="w-full h-64 object-cover rounded-lg mb-3"
                 />
