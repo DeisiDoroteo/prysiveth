@@ -12,12 +12,12 @@ const urlsToCache = [
   '/InformacionM',
   '/InformacionP',
   '/InformacionVP',
-  '/src/img/1.png',
-  '/src/img/2.png',
-  '/src/img/3.png',
-  '/src/img/4.jpeg',
-  '/src/img/logo.png',
-  '/src/img/headerB.jpg',
+  '/public/src/img/1.png', // Ruta correcta para las imágenes
+  '/public/src/img/2.png',
+  '/public/src/img/3.png',
+  '/public/src/img/4.jpeg',
+  '/public/src/img/logo.png',
+  '/public/src/img/headerB.jpg',
 ];
 
 self.addEventListener('install', (event) => {
@@ -25,7 +25,7 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('[Service Worker] Caching files');
-        return cache.addAll(urlsToCache);
+        return cache.addAll(urlsToCache); // Agrega todas las URLs al caché
       })
   );
   console.log('[Service Worker] Installing Service Worker ...', event);
@@ -38,7 +38,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
+            return caches.delete(cacheName); // Elimina cachés antiguos
           }
         })
       );
@@ -53,35 +53,39 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request)
       .then((response) => {
         if (response) {
-          return response;
+          return response; // Si el archivo está en caché, lo devuelve
         }
-        return fetch(event.request);
+        return fetch(event.request); // Si no, hace la solicitud de red
       })
   );
 });
 
-// Ruta de Workbox para las imágenes del slider
+// Registro de rutas usando Workbox para las imágenes
 registerRoute(
-  ({ url }) => url.pathname.startsWith('/src/img/'),
+  ({ request }) => request.destination === 'image',
   new StaleWhileRevalidate({
-    cacheName: 'slider-images',
+    cacheName: 'image-cache',
     plugins: [
-      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200], // Acepta respuestas con código 0 o 200
+      }),
       new ExpirationPlugin({
-        maxEntries: 10,
+        maxEntries: 60, // Límite de 60 entradas en caché
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
       }),
     ],
   })
 );
 
-// Ruta de Workbox para las páginas
+// Registro de rutas para las páginas
 registerRoute(
   ({ request }) => request.destination === 'document',
   new StaleWhileRevalidate({
     cacheName: 'pages-cache',
     plugins: [
-      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
       new ExpirationPlugin({
         maxEntries: 60,
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
@@ -96,8 +100,8 @@ self.addEventListener('push', (event) => {
   const title = data.title || 'Notificación Push';
   const options = {
     body: data.body,
-    icon: data.icon || '/assets/mudanzas.jpeg',
-    badge: data.badge || '/assets/mudanzas.jpeg',
+    icon: data.icon || '/assets/mudanzas.jpeg', // Ícono por defecto
+    badge: data.badge || '/assets/mudanzas.jpeg', // Insignia por defecto
   };
 
   event.waitUntil(
