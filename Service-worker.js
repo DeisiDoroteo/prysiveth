@@ -18,6 +18,13 @@ const urlsToCache = [
   '/public/src/img/4.jpeg',
   '/public/src/img/logo.png',
   '/public/src/img/headerB.jpg',
+
+  '/public/src/img/Guadalajara.jpg',
+  '/public/src/img/Monterrey.jpeg',
+  '/public/src/img/Queretaro.jpeg',
+  '/public/src/img/Tampico.jpeg',
+  '/public/src/img/Valles.jpg',
+
 ];
 
 self.addEventListener('install', (event) => {
